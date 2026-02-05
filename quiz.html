@@ -76,6 +76,13 @@ SELECT
     extension
 FROM employees;</code></pre>
                         </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * FROM v_internal_directory;</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,6 +167,13 @@ SELECT
     (od.unit_price * od.quantity * (1 - od.discount)) * 1.07 AS total_including_vat
 FROM order_details od
 JOIN products p ON od.product_id = p.product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * FROM v_invoice_details;</code></pre>
                         </div>
                     </div>
                 </div>
@@ -256,6 +270,13 @@ FROM products p
 JOIN categories c ON p.category_id = c.category_id
 JOIN suppliers s ON p.supplier_id = s.supplier_id;</code></pre>
                         </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * FROM v_procurement_risk_report;</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -323,6 +344,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;</code></pre>
                         </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT fn_check_stock_value(1);</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -368,7 +396,7 @@ $$ LANGUAGE plpgsql;</code></pre>
                                 <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: เขียน Query</span>
                                 <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
                             </div>
-<pre><code class="language-sql">SELECT o.order_id, o.order_date, s.company_name
+<pre><code class="language-sql">SELECT o.order_id::INTEGER, o.order_date, s.company_name
 FROM orders o
 JOIN shippers s ON o.ship_via = s.shipper_id
 WHERE o.customer_id = :p_customer_id</code></pre>
@@ -387,12 +415,19 @@ RETURNS TABLE(
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT o.order_id, o.order_date, s.company_name
+    SELECT o.order_id::INTEGER, o.order_date, s.company_name
     FROM orders o
     JOIN shippers s ON o.ship_via = s.shipper_id
     WHERE o.customer_id = p_customer_id;
 END;
 $$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * FROM fn_customer_order_history('VINET');</code></pre>
                         </div>
                     </div>
                 </div>
@@ -492,6 +527,21 @@ BEGIN
     RETURN 'Success: บันทึกและตัดสต็อกเรียบร้อย';
 END;
 $$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">ตรวจสอบคำตอบ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * FROM order_details
+WHERE order_id = 10248;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">เพิ่มข้อมูล</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT fn_place_order_item(10248, 12, 5);</code></pre>
                         </div>
                     </div>
                 </div>
