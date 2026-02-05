@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Training: Ultimate Setup & Troubleshooting Guide</title>
+    <style>
+        :root {
+            --primary-color: #336791;
+            /* Postgres Blue */
+            --secondary-color: #263238;
+            --error-color: #d9534f;
+            --success-color: #28a745;
+            --warning-color: #f39c12;
+            --bg-color: #f8f9fa;
+            --mac-color: #555;
+            --win-color: #0078d4;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Prompt', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 4px solid var(--primary-color);
+            padding-bottom: 15px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 40px;
+            border-left: 6px solid var(--primary-color);
+            padding-left: 15px;
+            background: #f0f4f8;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        /* Tab Styles */
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+            background: #eee;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            cursor: pointer;
+            border: none;
+            background: #eee;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-btn.active.win {
+            background: var(--win-color);
+            color: white;
+        }
+
+        .tab-btn.active.mac {
+            background: var(--mac-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-intro {
+            background: #eef7ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #d1e3f5;
+        }
+
+        .issue-card {
+            background: #fffafa;
+            border: 1px solid #f5c6cb;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .issue-header {
+            font-weight: bold;
+            color: var(--error-color);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solution {
+            background: #f0fff4;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .solution-title {
+            font-weight: bold;
+            color: var(--success-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .highlight-box {
+            background: #fffef0;
+            border-left: 6px solid var(--warning-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        code {
+            background: #2d2d2d;
+            color: #61afef;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #dfe2e5;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .file-path {
+            color: #e06c75;
+            font-weight: bold;
+            font-family: monospace;
+            background: #fdf2f2;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .kbd {
+            background-color: #eee;
+            border-radius: 3px;
+            border: 1px solid #b4b4b4;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+            color: #333;
+            display: inline-block;
+            font-size: .85em;
+            font-weight: 700;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>SQL Training: การติดตั้งและการแก้ไขปัญหา</h1>
+
+        <div class="section-intro">
+            <strong>ภาพรวม:</strong> การเทรนนิ่งนี้จะใช้ <strong>PostgreSQL</strong> (Server) และ
+            <strong>DBeaver</strong> (Client) ข้อมูลจะถูกเก็บไว้ที่เครื่องของท่านเอง (Localhost)
+            กรุณาเลือกแถบระบบปฏิบัติการที่ท่านใช้งานด้านล่างนี้
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn win active" onclick="openTab(event, 'windows')">🪟 Windows Guide</button>
+            <button class="tab-btn mac" onclick="openTab(event, 'macos')">🍎 macOS Guide</button>
+        </div>
+
+        <div id="windows" class="tab-content active">
+            <h2>1. การติดตั้งและการเตรียมตัว</h2>
+            <h3>A. ติดตั้ง PostgreSQL</h3>
+            <p>ดาวน์โหลดจาก <a href="https://www.postgresql.org/download/" target="_blank">postgresql.org</a>
+                เลือกเวอร์ชัน 15 หรือ 16 <strong>*จดจำรหัสผ่านที่ตั้งไว้ให้ดี*</strong></p>
+
+            <h3>B. ติดตั้ง DBeaver</h3>
+            <p>ดาวน์โหลดเวอร์ชัน Community จาก <a href="https://dbeaver.io/download/" target="_blank">dbeaver.io</a>
+                เพื่อใช้เป็นหน้าจอเขียน SQL</p>
+
+            <h2>2. วิธีตรวจสอบว่า "ของพร้อมหรือยัง?"</h2>
+            <div class="highlight-box">
+                <strong>วิธีเช็คผ่าน Terminal/CMD:</strong> พิมพ์ <code>psql -V</code>
+                หากขึ้นเวอร์ชันแสดงว่าติดตั้งเรียบร้อย <br><br>
+                <strong>วิธีเช็คผ่าน Windows Services:</strong> กด <span class="kbd">Win</span> + <span
+                    class="kbd">R</span> พิมพ์ <code>services.msc</code> หาชื่อ <code>postgresql-x64-16</code>
+                ตรวจดูสถานะว่า <strong>Running</strong> หรือไม่
+            </div>
+
+            <h2>3. การแก้ไขปัญหาที่พบบ่อย (Troubleshooting)</h2>
+
+            <div class="issue-card">
+                <h3>ต่อฐานข้อมูลไม่ได้ (Connection Refused / Timeout)</h3>
+                <p><strong>สาเหตุ 1:</strong> Service ยังไม่ได้เริ่มรัน หรือค้าง</p>
+                <div class="solution">
+                    <strong>วิธีแก้ (Restart Service):</strong>
+                    ไปที่ <code>services.msc</code> คลิกขวาที่ <strong>PostgreSQL</strong> เลือก
+                    <strong>Restart</strong> เพื่อเริ่มต้นระบบใหม่
+                </div>
+                <p><strong>สาเหตุ 2:</strong> Firewall ของ Windows บล็อก Port 5432</p>
+                <div class="solution">
+                    <strong>วิธีเช็ค Firewall:</strong> เปิด PowerShell พิมพ์
+                    <code>Test-NetConnection -ComputerName localhost -Port 5432</code>
+                    ถ้าผลเป็น <strong>False</strong> ให้ทำตามนี้:<br>
+                    1. เปิด <strong>Windows Defender Firewall with Advanced Security</strong><br>
+                    2. ไปที่ <strong>Inbound Rules</strong> > <strong>New Rule...</strong><br>
+                    3. เลือก <strong>Port</strong> > <strong>TCP</strong> > ใส่เลข <code>5432</code><br>
+                    4. เลือก <strong>Allow the connection</strong> และตั้งชื่อกฎว่า <code>PostgreSQL-In</code>
+                </div>
+            </div>
+
+            <div class="issue-card">
+                <h3>Port ชน (Address already in use: 5432)</h3>
+                <p><strong>สาเหตุ:</strong> มีโปรแกรมอื่น เช่น Docker หรือ Postgres ตัวเก่าใช้งาน Port นี้อยู่</p>
+                <div class="solution">
+                    <strong>วิธีเช็ค:</strong> เปิด CMD (Admin) พิมพ์ <code>netstat -ano | findstr :5432</code>
+                    จะเห็นเลข PID (ขวาสุด)<br>
+                    <strong>วิธีแก้ที่ 1 (ปิดตัวที่ชน):</strong> พิมพ์ <code>taskkill /PID [เลข PID] /F</code><br>
+                    <strong>วิธีแก้ที่ 2 (เปลี่ยน Port ของ Postgres):</strong><br>
+                    1. ไปที่โฟลเดอร์เก็บข้อมูล <span class="file-path">C:\Program Files\PostgreSQL\16\data\</span><br>
+                    2. เปิดไฟล์ <span class="file-path">postgresql.conf</span> ด้วย Notepad (Admin)<br>
+                    3. หาบรรทัด <code>port = 5432</code> แก้เป็น <code>port = 5433</code><br>
+                    4. <strong>Restart Service</strong> 1 รอบ และตอนต่อ DBeaver ต้องเปลี่ยน Port เป็น 5433 ตาม
+                </div>
+            </div>
+
+            <div class="issue-card">
+                <h3>ลืมรหัสผ่าน (Password Authentication Failed)</h3>
+                <p><strong>สาเหตุ:</strong> พิมพ์รหัสผิด หรือจำรหัสที่ตั้งตอนติดตั้งไม่ได้</p>
+                <div class="solution">
+                    <strong>วิธีแก้ (Reset Password):</strong><br>
+                    1. ไปที่โฟลเดอร์ Data ของ Postgres หาไฟล์ <span class="file-path">pg_hba.conf</span><br>
+                    2. หาบรรทัดที่ขึ้นว่า <code>host all all 127.0.0.1/32 scram-sha-256</code> แล้วแก้คำข้างหลังสุดเป็น
+                    <code>trust</code><br>
+                    3. <strong>Restart Service</strong><br>
+                    4. เข้า DBeaver ได้ทันทีโดยไม่ต้องใส่รหัส แล้วรัน SQL:
+                    <code>ALTER USER postgres PASSWORD '1234';</code><br>
+                    5. **สำคัญ** กลับไปแก้ในไฟล์ <code>pg_hba.conf</code> ให้เป็น <code>scram-sha-256</code>
+                    เหมือนเดิมเพื่อความปลอดภัย
+                </div>
+            </div>
+
+            <h2>4. ข้อมูลการจัดการ Database</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>หัวข้อ</th>
+                        <th>รายละเอียด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>จำนวน Database</strong></td>
+                        <td>สร้างได้ไม่จำกัดตามขนาด Disk (แนะนำสร้างใหม่สำหรับ Training เสมอ)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ตำแหน่งไฟล์ Config</strong></td>
+                        <td><span class="file-path">C:\Program Files\PostgreSQL\[Version]\data\</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>User มาตรฐาน</strong></td>
+                        <td><code>postgres</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Port มาตรฐาน</strong></td>
+                        <td><code>5432</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>กรณีต่อ DBeaver ครั้งแรก</strong></td>
+                        <td>ต้องกดปุ่ม <strong>"Download"</strong> เมื่อโปรแกรมถามหา Driver (ต้องใช้อินเทอร์เน็ต)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>5. SQL Scripts สำหรับการตรวจสอบ</h2>
+            <pre>
+    -- ตรวจสอบเวอร์ชันและฐานข้อมูลปัจจุบัน
+    SELECT version(), current_database();
+
+    -- ตรวจสอบตำแหน่งไฟล์ Config ในเครื่อง (หากต่อติดแล้ว)
+    SHOW config_file;
+    SHOW hba_file;
+
+    -- ตรวจสอบ Port ที่ใช้งานอยู่จริง
+    SHOW port;
+
+    -- ดูรายชื่อฐานข้อมูลทั้งหมดในเครื่อง
+    SELECT datname FROM pg_database;
+
+    -- 4. ตรวจสอบรายชื่อตารางที่มีใน Database (ปัจจุบัน)
+    SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+    </pre>
+        </div>
+
+        <div id="macos" class="tab-content">
+            <h2>1. การติดตั้ง (macOS)</h2>
+            <p><strong>Postgres.app:</strong> ดาวน์โหลดจาก <a href="https://postgresapp.com/"
+                    target="_blank">Postgresapp.com</a> (แนะนำเพราะจัดการง่ายที่สุด)</p>
+            <p><strong>Homebrew:</strong> พิมพ์คำสั่ง <code>brew install postgresql@16</code></p>
+
+            <h2>2. วิธีเช็คสถานะระบบ (macOS)</h2>
+            <div class="highlight-box">
+                <strong>Postgres.app:</strong> สังเกตไอคอนรูปช้างบน Menu Bar ต้องเป็นสีเขียว<br>
+                <strong>Homebrew:</strong> พิมพ์ <code>brew services list</code> เพื่อดูสถานะการรัน
+            </div>
+
+            <h2>3. การแก้ไขปัญหา (macOS)</h2>
+            <div class="issue-card">
+                <div class="issue-header">🚨 ต่อฐานข้อมูลไม่ได้ (Connection Refused)</div>
+                <div class="solution">
+                    <span class="solution-title">วิธีแก้:</span>
+                    ใช้คำสั่ง <code>brew services restart postgresql@16</code> หรือถ้าใช้ App ให้กดปุ่ม
+                    <strong>Restart</strong> ในหน้าต่างโปรแกรม<br>
+                    <span class="solution-title">เช็ค Port:</span> พิมพ์ <code>nc -zv localhost 5432</code> ใน Terminal
+                </div>
+            </div>
+
+            <div class="issue-card">
+                <div class="issue-header">🚨 Port ชน (Address already in use)</div>
+                <div class="solution">
+                    <span class="solution-title">วิธีเช็คโปรแกรมที่ใช้ Port:</span>
+                    พิมพ์ <code>sudo lsof -i :5432</code><br>
+                    <span class="solution-title">วิธีปิด:</span> <code>sudo kill -9 [เลข PID]</code>
+                </div>
+            </div>
+
+            <div class="issue-card">
+                <div class="issue-header">🚨 ลืมรหัสผ่าน (Reset Password)</div>
+                <div class="solution">
+                    1. หาไฟล์ <span class="file-path">pg_hba.conf</span> (มักอยู่ที่
+                    <code>/Users/[User]/Library/Application Support/Postgres/var-16/</code> หรือใน Folder Data)<br>
+                    2. เปลี่ยน <code>scram-sha-256</code> เป็น <strong><code>trust</code></strong><br>
+                    3. Restart และเข้า DBeaver รัน: <code>ALTER USER postgres PASSWORD '1234';</code><br>
+                    4. อย่าลืมแก้ไฟล์กลับเป็น <code>scram-sha-256</code>
+                </div>
+            </div>
+
+            <h2>4. ข้อมูลการจัดการ Database</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>หัวข้อ</th>
+                        <th>รายละเอียด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>จำนวน Database</strong></td>
+                        <td>สร้างได้ไม่จำกัดตามขนาด Disk (แนะนำสร้างใหม่สำหรับ Training เสมอ)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ตำแหน่งไฟล์ Config</strong></td>
+                        <td><span class="file-path">C:\Program Files\PostgreSQL\[Version]\data\</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>User มาตรฐาน</strong></td>
+                        <td><code>postgres</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Port มาตรฐาน</strong></td>
+                        <td><code>5432</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>กรณีต่อ DBeaver ครั้งแรก</strong></td>
+                        <td>ต้องกดปุ่ม <strong>"Download"</strong> เมื่อโปรแกรมถามหา Driver (ต้องใช้อินเทอร์เน็ต)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>5. SQL Scripts สำหรับการตรวจสอบ</h2>
+            <pre>
+-- ตรวจสอบเวอร์ชันและฐานข้อมูลปัจจุบัน
+SELECT version(), current_database();
+
+-- ตรวจสอบตำแหน่งไฟล์ Config ในเครื่อง (หากต่อติดแล้ว)
+SHOW config_file;
+SHOW hba_file;
+
+-- ตรวจสอบ Port ที่ใช้งานอยู่จริง
+SHOW port;
+
+-- ดูรายชื่อฐานข้อมูลทั้งหมดในเครื่อง
+SELECT datname FROM pg_database;
+
+-- 4. ตรวจสอบรายชื่อตารางที่มีใน Database (ปัจจุบัน)
+SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+    </pre>
+        </div>
+
+        <div
+            style="text-align: center; margin-top: 50px; padding: 20px; border-top: 1px solid #eee; color: #777; font-size: 0.9em;">
+            <p>© 2026 SQL Training Handout - PostgreSQL & DBeaver Troubleshooting Guide</p>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, osName) {
+            var i, tabcontent, tablinks;
+            // ซ่อนเนื้อหาทั้งหมด
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            // ลบคลาส active ออกจากปุ่มทั้งหมด
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            // แสดงเนื้อหาที่เลือกและเพิ่มคลาส active ให้ปุ่ม
+            document.getElementById(osName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+</body>
+
+</html>

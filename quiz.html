@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Challenge Workshop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
+        code, pre { font-family: 'JetBrains Mono', monospace !important; font-size: 14px !important; }
+        .hidden-content { display: none; }
+        .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; }
+        .card[data-type="function"] { display: none; } /* ซ่อน Function ไว้ก่อนตอนเริ่มต้น */
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-2">SQL Workshop</h1>
+            <p class="text-slate-600">รวมโจทย์ SQL View และ Function สำหรับ Northwind Database</p>
+        </header>
+
+        <div class="flex space-x-4 mb-6 border-b border-slate-200">
+            <button onclick="filterType('view')" id="tab-view" class="px-4 py-2 font-semibold tab-active transition">Database Views</button>
+            <button onclick="filterType('function')" id="tab-function" class="px-4 py-2 font-semibold text-slate-500 hover:text-blue-500 transition">Stored Functions</button>
+        </div>
+
+        <div id="questions-container" class="space-y-6">
+            
+            <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="view">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase">View</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 1</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">นโยบาย Data Privacy (แผนก IT Security)</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed">"แผนก IT Security" มีนโยบายป้องกันข้อมูลรั่วไหล (Data Privacy) โดยอนุญาตให้พนักงานทั่วไปดูรายชื่อผู้บริหารและพนักงานเพื่อติดต่อประสานงานได้ แต่ ห้ามเข้าถึงข้อมูลส่วนตัว เช่น ที่อยู่ (Address), วันเกิด (BirthDate) และเบอร์โทรศัพท์บ้าน เพื่อป้องกันการนำข้อมูลไปใช้ผิดวัตถุประสงค์</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed">จงสร้าง View ชื่อ <b>v_internal_directory</b> โดยดึงข้อมูล รหัสพนักงาน, ชื่อ-นามสกุล, ตำแหน่ง และเบอร์ต่อภายใน</p>
+
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: ดึงข้อมูลทั้งหมดมาดูก่อน</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT * 
+FROM employees;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 2: ตรวจสอบข้อมูลก่อนทำ View</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    employee_id,
+    first_name || ' ' || last_name AS full_name, -- การต่อ String
+    title,
+    extension
+FROM employees;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE VIEW v_internal_directory AS
+SELECT
+    employee_id,
+    first_name || ' ' || last_name AS full_name,
+    title,
+    extension
+FROM employees;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="view">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase">View</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 2</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">สรุปยอดเงินใบสั่งซื้อ (แผนกบัญชี)</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic">"แผนกบัญชี" ต้องทำสรุปยอดเงินในแต่ละใบสั่งซื้อ (Invoicing) เพื่อส่งให้ลูกค้า แต่ข้อมูลราคาสินค้าดันแยกอยู่คนละตารางกับชื่อสินค้า และยังมีเงื่อนไขว่าต้องคำนวณภาษีมูลค่าเพิ่ม (VAT 7%) แยกออกมาให้ชัดเจนด้วย</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic">จงสร้าง View ชื่อ <b>v_invoice_details</b> คำนวณราคาสินค้าและ VAT 7%</p>
+
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: ตรวจสอบข้อมูล order_details</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    *
+FROM order_details od</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 2: Join กับตาราง products</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+	*
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 2: ดึงข้อมูลที่ต้องการ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    od.order_id,
+    p.product_name,
+    od.unit_price,
+    od.quantity,
+    od.discount
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: ดึงข้อมูล และคำนวณข้อมูล</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    od.order_id,
+    p.product_name,
+    od.unit_price,
+    od.quantity,
+    od.discount,
+    (od.unit_price * od.quantity * (1 - od.discount)) AS subtotal,
+    (od.unit_price * od.quantity * (1 - od.discount)) * 0.07 AS vat_7,
+    (od.unit_price * od.quantity * (1 - od.discount)) * 1.07 AS total_including_vat
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE VIEW v_invoice_details AS
+SELECT
+    od.order_id,
+    p.product_name,
+    od.unit_price,
+    od.quantity,
+    od.discount,
+    (od.unit_price * od.quantity * (1 - od.discount)) AS subtotal,
+    (od.unit_price * od.quantity * (1 - od.discount)) * 0.07 AS vat_7,
+    (od.unit_price * od.quantity * (1 - od.discount)) * 1.07 AS total_including_vat
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="view">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase">View</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 3</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">วิเคราะห์ความเสี่ยงสต็อก (แผนกจัดซื้อ)</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed">"แผนกจัดซื้อ" บ่นว่าทำงานยาก เพราะเวลาจะเช็คว่าสินค้าตัวไหนหมด ต้องเปิดดูหลายที่ เขาอยากได้รายงาน "วิเคราะห์ความเสี่ยงสต็อก" ที่บอกว่าสินค้าชื่ออะไร อยู่หมวดไหน ใครเป็นคนส่ง (Supplier) เบอร์ติดต่อคืออะไร และสถานะสต็อกตอนนี้เป็นอย่างไร (ต้องสั่งเพิ่มหรือยัง)</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed">สร้าง View <b>v_procurement_risk_report</b> แสดงสถานะ Low Stock</p>
+
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: ตรวจสอบข้อมูล products</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    *
+FROM products p</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 2: Join ตาราง categories และ suppliers</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    *
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN suppliers s ON p.supplier_id = s.supplier_id</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 3: แสดงข้อมูลที่ต้องการ</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    p.product_name,
+    c.category_name,
+    s.company_name AS supplier_name,
+    s.phone AS supplier_phone,
+    p.units_in_stock,
+    p.reorder_level,
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN suppliers s ON p.supplier_id = s.supplier_id</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 3: แสดงข้อมูล ตามเงื่อนไข</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT
+    p.product_name,
+    c.category_name,
+    s.company_name AS supplier_name,
+    s.phone AS supplier_phone,
+    p.units_in_stock,
+    p.reorder_level,
+    CASE
+        WHEN p.units_in_stock <= p.reorder_level THEN 'Low Stock - Reorder Now'
+        ELSE 'Normal'
+    END AS stock_status
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN suppliers s ON p.supplier_id = s.supplier_id</code></pre>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE VIEW v_procurement_risk_report AS
+SELECT
+    p.product_name,
+    c.category_name,
+    s.company_name AS supplier_name,
+    s.phone AS supplier_phone,
+    p.units_in_stock,
+    p.reorder_level,
+    CASE
+        WHEN p.units_in_stock <= p.reorder_level THEN 'Low Stock - Reorder Now'
+        ELSE 'Normal'
+    END AS stock_status
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN suppliers s ON p.supplier_id = s.supplier_id;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="function">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Function</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 4</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">ฟังก์ชันคำนวณมูลค่าสินค้า</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic">"ผู้จัดการคลังสินค้า" ต้องการทราบมูลค่าของเงินที่จมอยู่ในสินค้าแต่ละรายการทันทีที่ระบุรหัสสินค้า เพื่อตัดสินใจเรื่องการทำประกันภัยสินค้าในโกดัง</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>โจทย์: </b>จงสร้างฟังก์ชันชื่อ fn_check_stock_value</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>ตารางที่ใช้: </b>products</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>สิ่งที่ต้องการ: </b>มูลค่าของสินค้า</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>บริบท: </b>รับ p_product_id เข้าไป แล้วคืนค่าเป็น "มูลค่าสินค้ารวมที่เหลืออยู่ในสต็อก" (สูตร: unit_price * units_in_stock)</p>
+                    
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">Funtion Syntax</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE [OR REPLACE] FUNCTION function_name (
+    parameter1 datatype, 
+    parameter2 datatype
+) 
+RETURNS return_datatype AS $$
+DECLARE
+    -- ส่วนของการประกาศตัวแปร (ถ้ามี)
+    variable_name datatype;
+BEGIN
+    -- ส่วนของ Logic (SQL + Control Structures)
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: เขียน Query</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT (unit_price * units_in_stock)
+FROM products
+WHERE product_id = :p_product_id</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION fn_check_stock_value(p_product_id INT)
+RETURNS NUMERIC AS $$
+DECLARE
+    v_total_value NUMERIC;
+BEGIN
+    SELECT (unit_price * units_in_stock) INTO v_total_value
+    FROM products
+    WHERE product_id = p_product_id;
+
+    RETURN v_total_value;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="function">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Function</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 5</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">ประวัติการสั่งซื้อ (Marketing)</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed">"ฝ่ายการตลาด" กำลังจะจัดแคมเปญส่งเสริมการขายแบบเฉพาะบุคคล (Personalized Marketing) เขาต้องการฟังก์ชันที่แค่ใส่รหัสลูกค้าลงไป ก็จะเห็นประวัติการสั่งซื้อทั้งหมดพร้อมชื่อบริษัทขนส่ง เพื่อดูว่าลูกค้าชอบใช้บริการขนส่งเจ้าไหน</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed"><b>โจทย์: </b>จงสร้างฟังก์ชันชื่อ fn_customer_order_history</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed"><b>ตารางที่ใช้: </b>orders, shippers </p>
+                    <p class="text-slate-600 mb-4 leading-relaxed"><b>สิ่งที่ต้องการ: </b>ประวัติการสั่งซื้อทั้งหมดพร้อมชื่อบริษัทขนส่ง</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed"><b>บริบท: </b>รับ p_customer_id เข้าไป แล้วคืนค่าเป็นตารางที่มีคอลัมน์: order_id, order_date, และ shipper_name (ซึ่งต้อง Join มาจากตาราง shippers)</p>
+                    
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">Funtion Syntax</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION function_name (
+   parameter1 datatype,
+  -- เพิ่มพารามิเตอร์ตามต้องการ
+) 
+RETURNS TABLE (
+    column1 datatype,
+    column2 datatype,
+) AS $$
+BEGIN
+    RETURN QUERY
+    -- คำสั่ง SELECT ที่ต้องการให้แสดงผล
+    SELECT ... ;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: เขียน Query</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT o.order_id, o.order_date, s.company_name
+FROM orders o
+JOIN shippers s ON o.ship_via = s.shipper_id
+WHERE o.customer_id = :p_customer_id</code></pre>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION fn_customer_order_history(p_customer_id VARCHAR)
+RETURNS TABLE(
+    order_id INT,
+    order_date DATE,
+    shipper_name VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT o.order_id, o.order_date, s.company_name
+    FROM orders o
+    JOIN shippers s ON o.ship_via = s.shipper_id
+    WHERE o.customer_id = p_customer_id;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" data-type="function">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Function</span>
+                        <span class="text-slate-400 text-sm">โจทย์ที่ 6</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">ระบบคุมสต็อกอัจฉริยะ</h3>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic">"แผนกคลังสินค้า" เจอปัญหาบ่อยครั้งว่าพนักงานคีย์ขายสินค้าเกินจำนวนที่มีจริง ทำให้เสียความน่าเชื่อถือ เราจึงต้องทำระบบ "คุมสต็อกอัจฉริยะ" ผ่าน Database
+โจทย์: จงสร้างฟังก์ชันชื่อ fn_place_order_item ที่ทำหน้าที่เพิ่มสินค้าลงในใบสั่งซื้อ (ตาราง order_details)</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>รับค่า </b>Order ID, Product ID, และ Quantity</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>Validation: </b>ตรวจสอบว่าสินค้ามีเพียงพอหรือไม่ ถ้าไม่พอให้คาย Error แจ้งจำนวนคงเหลือ</p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>Auto-Pricing: </b>ให้ดึงราคาล่าสุด (unit_price) จากตาราง products มาบันทึกลงใน Order เองอัตโนมัติ (ไม่ต้องรับเป็น Parameter) </p>
+                    <p class="text-slate-600 mb-4 leading-relaxed italic italic"><b>Inventory Sync: </b>เมื่อบันทึกสำเร็จ ต้องไปลดจำนวนสินค้าในตาราง products ทันที</p>
+                    
+                    <button onclick="toggleAnswer(this)" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-lg font-medium transition shadow-md">ดูเฉลย</button>
+
+                    <div class="answer-section hidden-content mt-6 space-y-6 border-t pt-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">Funtion Syntax</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE [OR REPLACE] FUNCTION function_name (
+    parameter1 datatype, 
+    parameter2 datatype
+) 
+RETURNS return_datatype AS $$
+DECLARE
+    -- ส่วนของการประกาศตัวแปร (ถ้ามี)
+    variable_name datatype;
+BEGIN
+    -- ส่วนของ Logic (SQL + Control Structures)
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 1: เขียน Query ดึงข้อมูล</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">SELECT unit_price, units_in_stock
+FROM products
+WHERE product_id = :p_product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 2: Script Insert ข้อมูล</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount)
+VALUES (:p_order_id, :p_product_id, :v_current_price, :p_qty, 0);</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-blue-600 italic">ขั้นที่ 3: Script Update ข้อมูล</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">UPDATE products
+SET units_in_stock = units_in_stock - :p_qty
+WHERE product_id = :p_product_id;</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-green-600 italic">คำตอบ Final</span>
+                                <button onclick="copyCode(this)" class="text-xs bg-slate-200 hover:bg-slate-300 px-2 py-1 rounded">Copy</button>
+                            </div>
+<pre><code class="language-sql">CREATE OR REPLACE FUNCTION fn_place_order_item(
+    p_order_id INT,
+    p_product_id INT,
+    p_qty INT
+) RETURNS TEXT AS $$
+DECLARE
+    v_current_stock INT;
+    v_current_price REAL;
+BEGIN
+    SELECT unit_price, units_in_stock INTO v_current_price, v_current_stock
+    FROM products
+    WHERE product_id = p_product_id;
+
+    IF v_current_stock < p_qty THEN
+        RAISE EXCEPTION 'สต็อกไม่พอ: สั่ง % แต่เหลือแค่ %', p_qty, v_current_stock;
+    END IF;
+
+    INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount)
+    VALUES (p_order_id, p_product_id, v_current_price, p_qty, 0);
+
+    UPDATE products
+    SET units_in_stock = units_in_stock - p_qty
+    WHERE product_id = p_product_id;
+
+    RETURN 'Success: บันทึกและตัดสต็อกเรียบร้อย';
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-sm pb-10">
+            &copy; 2024 SQL Workshop - Softsquare
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+    <script>
+        // ฟังก์ชันสลับการแสดงผลเฉลย
+        function toggleAnswer(btn) {
+            const section = btn.nextElementSibling;
+            if (section.style.display === "block") {
+                section.style.display = "none";
+                btn.textContent = "ดูเฉลย";
+            } else {
+                section.style.display = "block";
+                btn.textContent = "ซ่อนเฉลย";
+            }
+        }
+
+        // ฟังก์ชันกรองหมวดหมู่ (View / Function)
+        function filterType(type) {
+            const cards = document.querySelectorAll('.card');
+            const tabs = [document.getElementById('tab-view'), document.getElementById('tab-function')];
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('text-slate-500');
+            });
+
+            document.getElementById('tab-' + type).classList.add('tab-active');
+            document.getElementById('tab-' + type).classList.remove('text-slate-500');
+
+            cards.forEach(card => {
+                if (card.getAttribute('data-type') === type) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // ฟังก์ชันก๊อปปี้โค้ด
+        async function copyCode(btn) {
+            const container = btn.parentElement.nextElementSibling;
+            const code = container.innerText; // ดึง text จาก <code> ภายใน <pre>
+            
+            try {
+                await navigator.clipboard.writeText(code);
+                const originalText = btn.textContent;
+                btn.textContent = "Copied!";
+                btn.classList.add('bg-green-500', 'text-white');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('bg-green-500', 'text-white');
+                }, 2000);
+            } catch (err) {
+                alert('ไม่สามารถคัดลอกได้: ' + err);
+            }
+        }
+    </script>
+</body>
+</html>
